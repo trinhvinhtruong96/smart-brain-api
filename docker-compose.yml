@@ -1,0 +1,47 @@
+version: '3.6'
+
+services:
+    #Backend API
+    smart-brain-api:
+        container_name: backend
+        # sevice nay thuong duoc build tu docker file de tao ra 1 image
+        # image: node:8.11.1
+        build: ./
+        command: npm start
+        working_dir: /usr/src/smart-brain-api
+        # env cuar docker cung giong env cua app, su dung bang process.env.envName
+        environment:
+            # thay vi dung nhu duoi co the dung uri ntn
+            # khi do connection trong app cung chi can dung uri
+            # POSTGRES_URI: postgres://sally:secret@localhost:5432/smart-brain-docker
+            POSTGRES_USER: Sally
+            POSTGRES_PASSWORD: secret
+            POSTGRES_DB: smart-brain-docker
+            #postgres tren docker ko dung ten host la localhost ma phai dung ten cua service
+            POSTGRES_HOST: postgres
+        # connect service nay voi service postgres, vi moi service la 1 container rieng, nen tren service nay su dung de service khac
+        # thi can link toi
+        # nhu o day la app nay dung postgres lam db, thi can link ts postgres
+        links:
+            - postgres
+        ports:
+            - "3000:3000"
+        volumes:
+            - ./:/usr/src/smart-brain-api # projectDir: containerDir -> project thay doi -> cotainer thay doi theo
+    #Postgres 
+    postgres:
+        environment:
+            # May bien ni trong image co san nen dua vao la tu config
+            POSTGRES_USER: Sally
+            POSTGRES_PASSWORD: secret
+            POSTGRES_DB: smart-brain-docker
+            #postgres tren docker ko dung ten host la localhost ma phai dung ten cua service (tren window xai localhost)
+            # xai postgres nhung ngoai may van connect ts localhost
+            # xai localhost thì ko xài dk port 5432
+            POSTGRES_HOST: postgres
+        # image postgres co container name san roi nen ko can config
+        # container_name: postgres
+        # lay image tu hub de build service
+        build: ./postgres
+        ports: 
+            - "5432:5432"
