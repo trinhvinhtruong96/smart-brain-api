@@ -22,8 +22,8 @@ services:
         # connect service nay voi service postgres, vi moi service la 1 container rieng, nen tren service nay su dung de service khac
         # thi can link toi
         # nhu o day la app nay dung postgres lam db, thi can link ts postgres
-        links:
-            - postgres
+        # links:
+        #     - postgres
         ports:
             - "3000:3000"
         volumes:
